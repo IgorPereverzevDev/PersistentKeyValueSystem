@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'nodes'
+    static_configs:
+      - targets: 
+          - 'node1:8000'
+          - 'node2:8000'
+          - 'node3:8000'
+          - 'node4:8000'

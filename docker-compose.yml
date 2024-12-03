@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+  node1:
+    build: .
+    ports:
+      - "8000:8000"
+      - "4321:4321"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4321
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - SELF_ADDR=node1:4321
+      - OTHER_NODES=["node2:4322","node3:4323", "node4:4324"]
+      - MAX_RETRY_ATTEMPTS=5
+      - RETRY_DELAY=2.0
+      - READY_TIMEOUT=10.0
+    networks:
+      - kvstore_network
+
+  node2:
+    build: .
+    ports:
+      - "8001:8000"
+      - "4322:4322"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4322
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - SELF_ADDR=node2:4322
+      - OTHER_NODES=["node1:4321","node3:4323", "node4:4324"]
+      - MAX_RETRY_ATTEMPTS=5
+      - RETRY_DELAY=2.0
+      - READY_TIMEOUT=10.0
+    networks:
+      - kvstore_network
+
+  node3:
+    build: .
+    ports:
+      - "8002:8000"
+      - "4323:4323"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4323
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - SELF_ADDR=node3:4323
+      - OTHER_NODES=["node1:4321","node2:4322", "node4:4324"]
+      - MAX_RETRY_ATTEMPTS=5
+      - RETRY_DELAY=2.0
+      - READY_TIMEOUT=10.0
+    networks:
+      - kvstore_network
+  
+  node4:
+    build: .
+    ports:
+      - "8003:8000"
+      - "4324:4324"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4324
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - SELF_ADDR=node4:4324
+      - OTHER_NODES=["node1:4321","node2:4322","node3:4323"]
+      - MAX_RETRY_ATTEMPTS=5
+      - RETRY_DELAY=2.0
+      - READY_TIMEOUT=10.0
+    networks:
+      - kvstore_network
+  
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus:ro
+      - prometheus_data:/prometheus
+    networks:
+      - kvstore_network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - kvstore_network
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin  # Default password
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  kvstore_network:
+    name: kvstore_network
+    driver: bridge
+
+
+volumes:
+  node1_data:
+  node2_data:
+  node3_data:
+  prometheus_data:
+  grafana_data:
