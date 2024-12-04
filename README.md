@@ -35,7 +35,7 @@ The system is built using:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd distributed-kvstore
+cd PersistentKeyValueSystem
 ```
 
 2. Create a virtual environment and install dependencies:
