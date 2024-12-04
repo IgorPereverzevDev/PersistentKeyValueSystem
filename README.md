@@ -109,8 +109,6 @@ pytest
 # Run specific test file
 pytest tests/test_kvstore.py
 
-# Run with coverage
-pytest --cov=db tests/
 ```
 
 ## Performance Benchmarks

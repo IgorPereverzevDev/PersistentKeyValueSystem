@@ -4,7 +4,7 @@ import logging
 import os
 import json
 
-from db.kvstore import KeyValueStore
+from storage.kvstore import KeyValueStore
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
