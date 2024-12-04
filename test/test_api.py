@@ -21,7 +21,6 @@ def mock_kv_store():
         yield mock_instance
 
 
-@pytest.mark.asyncio
 def test_put_success(client, mock_kv_store):
     mock_kv_store.put.return_value = True
     response = client.put("/kv/test_key", json="test")

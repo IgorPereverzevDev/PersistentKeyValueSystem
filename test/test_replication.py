@@ -3,7 +3,7 @@ import time
 from typing import List, Optional
 import pytest
 from unittest.mock import patch
-from db.database import KeyValueStore
+from db.kvstore import KeyValueStore
 
 
 class TestReplication:

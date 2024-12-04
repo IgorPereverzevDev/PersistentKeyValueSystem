@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException, Body
 from pysyncobj.node import TCPNode
 
 from cluster import wait_for_cluster_connection
-from db.database import KeyValueStore, ReplicationError, ConnectionKeyValueError
+from db.kvstore import KeyValueStore, ReplicationError, ConnectionKeyValueError
 from model.model import KeyRange, BatchPutRequest
 from settings import settings
 

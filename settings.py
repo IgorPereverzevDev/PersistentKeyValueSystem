@@ -1,5 +1,5 @@
 from typing import List
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 from dotenv import load_dotenv
 
@@ -7,6 +7,7 @@ load_dotenv()
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env")
     HOST: str = "localhost"
     PORT: int = 4324
 
@@ -29,9 +30,6 @@ class Settings(BaseSettings):
     API_PORT: int = 8000
     PROMETHEUS_PORT: int = 9090
     METRICS_ENABLED: bool = True
-
-    class Config:
-        env_file = ".env"
 
 
 @lru_cache()

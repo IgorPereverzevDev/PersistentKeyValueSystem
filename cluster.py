@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from db.database import KeyValueStore
+from db.kvstore import KeyValueStore
 from settings import settings
 
 logging.basicConfig(level=logging.DEBUG)
